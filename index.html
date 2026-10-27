@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>جدول المحاضرات - الفرقة الأولى - الإعلام التربوي</title>
+<style>
+  :root{
+    --bg:#f4f1fb; --card:#ffffff; --text:#1e1b2e; --muted:#6b6785; --line:#e2dcf3; --accent:#6d28d9;
+  }
+  body.dark{ --bg:#14121f; --card:#1e1b2e; --text:#f1eefc; --muted:#a39fc0; --line:#332e4d; --accent:#a78bfa; }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:"Segoe UI",Tahoma,Arial,sans-serif;background:var(--bg);color:var(--text);line-height:1.5}
+  header{background:linear-gradient(135deg,#6d28d9,#db2777);color:#fff;padding:22px 16px;text-align:center}
+  header h1{margin:0 0 4px;font-size:1.35rem}
+  header p{margin:0;opacity:.9;font-size:.9rem}
+  .wrap{max-width:1300px;margin:auto;padding:14px}
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:14px;box-shadow:0 2px 10px rgba(0,0,0,.05)}
+  .search{width:100%;padding:12px 14px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--text);font-size:1rem}
+  .filters{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-top:10px}
+  .filters label{font-size:.78rem;color:var(--muted);display:block;margin-bottom:3px}
+  select{width:100%;padding:9px;border-radius:9px;border:1px solid var(--line);background:var(--bg);color:var(--text);font-size:.92rem}
+  .bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:12px}
+  button{border:1px solid var(--line);background:var(--bg);color:var(--text);padding:8px 14px;border-radius:9px;cursor:pointer;font-size:.88rem;font-family:inherit}
+  button.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+  button:hover{filter:brightness(.96)}
+  .count{margin-inline-start:auto;color:var(--muted);font-size:.88rem}
+  .legend{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+  .chip{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:99px;font-size:.78rem;cursor:pointer;border:1px solid var(--line);background:var(--bg);user-select:none}
+  .chip i{width:11px;height:11px;border-radius:50%;display:inline-block}
+  .chip.sel{outline:2px solid var(--accent)}
+  /* grid view */
+  .gridscroll{overflow-x:auto;padding-bottom:6px}
+  .gridinner{min-width:1100px}
+  .row{display:flex;gap:8px;margin-bottom:10px}
+  .dayl{width:68px;flex:none;background:var(--accent);color:#fff;border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.95rem}
+  .groups{flex:1;display:flex;flex-direction:column;gap:6px}
+  .g{display:grid;grid-template-columns:24px repeat(8,minmax(125px,1fr));gap:5px;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:5px;align-items:stretch}
+  .g.head{background:transparent;border:none;padding:0 5px 0 5px;font-weight:700;font-size:.82rem;color:var(--muted);text-align:center}
+  .gl{grid-column:1;grid-row:1/span 10;display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--muted);font-size:.8rem;writing-mode:horizontal-tb}
+  .cell{border-radius:9px;padding:6px 8px;font-size:.78rem;border-inline-start:5px solid var(--c);background:color-mix(in srgb,var(--c) 17%,var(--card));min-height:62px}
+  .cell b{display:block;font-size:.8rem;margin-bottom:2px}
+  .cell small{display:block;color:var(--muted)}
+  .cell .tag{display:inline-block;background:var(--c);color:#fff;border-radius:6px;padding:0 6px;font-size:.7rem;margin-top:2px}
+  .empty{grid-column:2/-1;text-align:center;color:var(--muted);padding:10px;font-size:.8rem}
+  /* list view */
+  .list{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:10px}
+  .daytitle{grid-column:1/-1;font-weight:700;margin-top:8px;color:var(--accent);font-size:1.05rem}
+  .item{border-radius:12px;padding:10px 12px;background:color-mix(in srgb,var(--c) 15%,var(--card));border:1px solid color-mix(in srgb,var(--c) 40%,var(--line));border-inline-start:6px solid var(--c)}
+  .item h4{margin:0 0 4px;font-size:.95rem}
+  .item div{font-size:.82rem;color:var(--muted)}
+  .item .time{color:var(--text);font-weight:700}
+  .none{text-align:center;color:var(--muted);padding:30px}
+  footer{text-align:center;color:var(--muted);font-size:.78rem;padding:14px}
+</style>
+</head>
+<body>
+<header>
+  <h1>جدول توزيع المحاضرات النظرية والتطبيقية — الفصل الدراسي الأول 2026</h1>
+  <p>جامعة المنيا • كلية التربية النوعية • الفرقة الأولى (لائحة الساعات المعتمدة) • قسم الإعلام التربوي</p>
+</header>
+
+<div class="wrap">
+  <div class="panel">
+    <input id="q" class="search" type="search" placeholder="ابحث عن مادة أو دكتور أو سكشن أو قاعة...">
+    <div class="filters">
+      <div><label>المادة</label><select id="fCourse"></select></div>
+      <div><label>الدكتور / المعيد</label><select id="fDoc"></select></div>
+      <div><label>السكشن</label><select id="fSec"></select></div>
+      <div><label>اليوم</label><select id="fDay"></select></div>
+      <div><label>المجموعة</label><select id="fGrp"></select></div>
+      <div><label>النوع</label><select id="fKind"></select></div>
+    </div>
+    <div class="bar">
+      <button id="vGrid" class="on">عرض الجدول</button>
+      <button id="vList">عرض القائمة</button>
+      <button id="pal">🎨 تغيير الألوان</button>
+      <button id="dk">🌙 الوضع الليلي</button>
+      <button id="reset">إعادة ضبط الفلاتر</button>
+      <span class="count" id="count"></span>
+    </div>
+    <div class="legend" id="legend"></div>
+  </div>
+
+  <div id="out"></div>
+</div>
+<footer>اضغط على اسم مادة في الأعلى لتصفية الجدول بها • البيانات قابلة للتعديل من أعلى كود الصفحة (DATA)</footer>
+
+<script>
+/* ===================== البيانات =====================
+   كل سطر: [اليوم, المجموعة, من, إلى, المادة, السكشن, القاعة, الدكتور, النوع]
+   النوع: م = محاضرة ، س = سكشن
+*/
+const M="مدخل الى علوم المسرح", R="مدخل الى الراديو والتلفزيون", S="مدخل الى علوم الصحافة",
+      C="المناهج وتنظيمها", T="مدخل الى العلوم التربوية", Q="قراءات باللغة العربية في التخصص",
+      N="نشأة وسائل الإعلام وتطورها", P="مدخل الى العلاقات العامة";
+const lec1="مدرج نوعية الرئيسي(1)", lec2="مدرج نوعية الرئيسي(2)", sera="مدرج د/ سراج علي";
+const D=[
+ // الأحد
+ ["الأحد","A",8,10,C,"",lec2,"أ.د/ أشرف رجب الريدي","م"],
+ ["الأحد","A",10,12,R,2,"ق دار علوم 2","أ/ أسماء عبد الحميد","س"],
+ ["الأحد","A",10,12,S,1,"ق 304","م.م/ أحمد المهدي","س"],
+ ["الأحد","A",14,16,R,1,"ق دار علوم 2","أ/ أسماء عبد الحميد","س"],
+ ["الأحد","A",14,16,S,2,"ق 302","م.م/ أحمد المهدي","س"],
+ ["الأحد","A",16,17,M,"",lec2,"أ.د/ ايمان عاشور سيد","م"],
+ ["الأحد","B",8,10,R,12,"ق دار علوم 2","أ/ أسماء عبد الحميد","س"],
+ ["الأحد","B",8,10,S,11,"ق 304","م.م/ أحمد المهدي","س"],
+ ["الأحد","B",12,14,R,11,"ق دار علوم 2","أ/ أسماء عبد الحميد","س"],
+ ["الأحد","B",12,14,S,10,"ق 302","م.م/ أحمد المهدي","س"],
+ ["الأحد","B",14,16,C,"",lec2,"أ.د/ أشرف رجب الريدي","م"],
+ ["الأحد","B",17,18,M,"",lec2,"أ.د/ ايمان عاشور سيد","م"],
+ // الاثنين
+ ["الاثنين","A",8,10,T,"","ق 303","أ.م.د/ سحر","م"],
+ ["الاثنين","A",10,12,R,3,"مدرج 8","أ/ إيرام سند","س"],
+ ["الاثنين","A",14,16,M,6,"ق دار علوم 1","أ/ أسماء عبد الحميد","س"],
+ ["الاثنين","B",8,10,M,11,"ق دار علوم 1","أ/ أسماء عبد الحميد","س"],
+ ["الاثنين","B",8,10,R,9,"ق دار علوم 2","أ/ إيرام سند","س"],
+ ["الاثنين","B",10,12,T,"","ق 303","أ.م.د/ سحر","م"],
+ ["الاثنين","B",14,16,R,3,"ق دار علوم 2","أ/ إيرام سند","س"],
+ ["الاثنين","B",16,18,Q,"",lec1,"أ.م.د/ زينب عبد العظيم","م"],
+ // الثلاثاء
+ ["الثلاثاء","A",8,10,M,"",sera,"أ.د/ حسام فايز","م"],
+ ["الثلاثاء","A",10,12,S,3,"ق 302","م.م/ أحمد المهدي","س"],
+ ["الثلاثاء","A",10,12,R,4,"ق دار علوم 1","أ/ إيرام سند","س"],
+ ["الثلاثاء","A",12,14,R,2,"ق دار علوم 2","أ/ أسماء محمود","س"],
+ ["الثلاثاء","A",12,14,R,5,"ق دار علوم 1","أ/ إيرام سند","س"],
+ ["الثلاثاء","A",14,16,S,4,"ق 302","م.م/ أحمد المهدي","س"],
+ ["الثلاثاء","A",14,16,R,6,"ق دار علوم 1","أ/ إيرام سند","س"],
+ ["الثلاثاء","A",16,18,Q,"",lec1,"أ.م.د/ زينب عبد العظيم","م"],
+ ["الثلاثاء","A",17,18,M,2,"ق دار علوم 2","أ/ أسماء محمود","س"],
+ ["الثلاثاء","B",8,10,S,"",sera,"أ.د/ حسام فايز","م"],
+ ["الثلاثاء","B",10,12,M,10,"ق دار علوم 2","أ/ أسماء محمود","س"],
+ ["الثلاثاء","B",12,14,S,12,"ق 302","م.م/ أحمد المهدي","س"],
+ ["الثلاثاء","B",14,16,M,8,"ق دار علوم 2","أ/ أسماء محمود","س"],
+ ["الثلاثاء","B",16,18,S,9,"ق 302","م.م/ أحمد المهدي","س"],
+ ["الثلاثاء","B",16,18,R,7,"ق دار علوم 1","أ/ إيرام سند","س"],
+ // الأربعاء
+ ["الأربعاء","الكل",8,10,N,"",lec2,"أ.د/ أحمد عبد الكافي عبد الفتاح","م"],
+ ["الأربعاء","الكل",10,12,S,5,"ق 302","م.م/ أحمد المهدي","س"],
+ ["الأربعاء","الكل",12,14,P,"",lec2,"أ.د/ ناصر عبد الفتاح","م"],
+ ["الأربعاء","الكل",14,16,S,6,"ق 302","م.م/ أحمد المهدي","س"],
+ ["الأربعاء","الكل",16,17,R,"",sera,"أ.د/ ايمان محمد أحمد","م"],
+ // الخميس
+ ["الخميس","A",8,10,S,7,"ق 302","م.م/ أحمد المهدي","س"],
+ ["الخميس","A",8,10,M,9,"ق دار علوم 2","أ/ أسماء محمود","س"],
+ ["الخميس","A",8,10,M,5,"ق دار علوم 1","أ/ أسماء محمود","س"],
+ ["الخميس","A",10,12,N,"",lec2,"أ.د/ أحمد عبد الكافي عبد الفتاح","م"],
+ ["الخميس","A",10,12,M,3,"ق دار علوم 2","أ/ أسماء محمود","س"],
+ ["الخميس","A",12,14,R,8,"ق دار علوم 2","أ/ إيرام سند","س"],
+ ["الخميس","A",14,16,P,"",lec2,"أ.د/ ناصر عبد الفتاح","م"],
+ ["الخميس","A",14,16,S,8,"ق 302","م.م/ أحمد المهدي","س"],
+ ["الخميس","A",17,18,R,"",sera,"أ.د/ ايمان محمد أحمد","م"],
+ ["الخميس","B",10,12,M,7,"ق دار علوم 1","أ/ أسماء محمود","س"],
+ ["الخميس","B",14,16,M,12,"مدرج 8","أ/ أسماء محمود","س"]
+].map((a,i)=>({id:i,day:a[0],grp:a[1],s:a[2],e:a[3],course:a[4],sec:a[5]===""?"":String(a[5]),hall:a[6],doc:a[7],kind:a[8]==="م"?"محاضرة":"سكشن"}));
+
+const DAYS=["الأحد","الاثنين","الثلاثاء","الأربعاء","الخميس"];
+const SLOTS=["8–9","9–10","10–11","11–12","12–2","2–4","4–5","5–6"];
+const COL={8:1,9:2,10:3,11:4,12:5,14:6,16:7,17:8,18:9};
+const COURSES=[M,R,S,C,T,Q,N,P];
+const PALETTES=[
+ ["#f97316","#8b5cf6","#14b8a6","#ec4899","#eab308","#3b82f6","#ef4444","#22c55e"],
+ ["#0ea5e9","#d946ef","#84cc16","#f43f5e","#a16207","#6366f1","#06b6d4","#fb923c"],
+ ["#e11d48","#0d9488","#7c3aed","#ca8a04","#2563eb","#c026d3","#16a34a","#ea580c"]
+];
+let pal=0, view="grid";
+try{ pal=+localStorage.getItem("pal")||0; if(localStorage.getItem("dk")==="1")document.body.classList.add("dark"); }catch(e){}
+const color=c=>PALETTES[pal][COURSES.indexOf(c)];
+const $=id=>document.getElementById(id);
+const t=h=>h>12?h-12:h;
+
+function fill(sel,label,vals){
+  $(sel).innerHTML=`<option value="">${label}</option>`+vals.map(v=>`<option>${v}</option>`).join("");
+}
+const uniq=a=>[...new Set(a)];
+fill("fCourse","كل المواد",COURSES);
+fill("fDoc","كل الدكاترة",uniq(D.map(x=>x.doc)));
+fill("fSec","كل السكاشن",uniq(D.filter(x=>x.sec).map(x=>+x.sec)).sort((a,b)=>a-b));
+fill("fDay","كل الأيام",DAYS);
+fill("fGrp","كل المجموعات",["A","B","الكل"]);
+fill("fKind","محاضرات وسكاشن",["محاضرة","سكشن"]);
+
+function filtered(){
+  const q=$("q").value.trim().toLowerCase();
+  const f={course:$("fCourse").value,doc:$("fDoc").value,sec:$("fSec").value,day:$("fDay").value,grp:$("fGrp").value,kind:$("fKind").value};
+  return D.filter(x=>{
+    if(f.course&&x.course!==f.course)return false;
+    if(f.doc&&x.doc!==f.doc)return false;
+    if(f.sec&&x.sec!==f.sec)return false;
+    if(f.day&&x.day!==f.day)return false;
+    if(f.grp&&x.grp!==f.grp)return false;
+    if(f.kind&&x.kind!==f.kind)return false;
+    if(q){
+      const hay=(x.course+" "+x.doc+" "+x.hall+" "+x.day+" "+(x.sec?"سكشن "+x.sec:"")+" "+x.kind+" "+x.grp).toLowerCase();
+      return q.split(/\s+/).every(w=>hay.includes(w));
+    }
+    return true;
+  });
+}
+
+function cellHTML(x){
+  return `<b>${x.course}</b>
+    <span class="tag">${x.kind}${x.sec?" • سكشن "+x.sec:""}</span>
+    <small>🕘 ${t(x.s)} – ${t(x.e)}</small>
+    <small>📍 ${x.hall}</small>
+    <small>👤 ${x.doc}</small>`;
+}
+
+function renderGrid(items){
+  let h=`<div class="gridscroll"><div class="gridinner">
+  <div class="row"><div style="width:68px;flex:none"></div><div class="groups"><div class="g head"><div></div>${SLOTS.map(s=>`<div>${s}</div>`).join("")}</div></div></div>`;
+  DAYS.forEach(day=>{
+    const di=items.filter(x=>x.day===day);
+    if(!di.length&&($("fDay").value||hasFilter()))return;
+    const grps=uniq(["A","B","الكل"].filter(g=>D.some(x=>x.day===day&&x.grp===g)));
+    h+=`<div class="row"><div class="dayl">${day}</div><div class="groups">`;
+    grps.forEach(g=>{
+      const gi=di.filter(x=>x.grp===g).sort((a,b)=>a.s-b.s);
+      if(!gi.length && hasFilter())return;
+      const lanes=[];
+      gi.forEach(x=>{
+        let l=lanes.findIndex(end=>end<=x.s);
+        if(l<0){l=lanes.length;lanes.push(0);}
+        lanes[l]=x.e; x._l=l;
+      });
+      h+=`<div class="g"><div class="gl" style="grid-row:1/span ${Math.max(lanes.length,1)}">${g}</div>`;
+      if(!gi.length)h+=`<div class="empty">—</div>`;
+      gi.forEach(x=>{
+        h+=`<div class="cell" style="--c:${color(x.course)};grid-column:${2+COL[x.s]-1}/${2+COL[x.e]-1};grid-row:${x._l+1}">${cellHTML(x)}</div>`;
+      });
+      h+=`</div>`;
+    });
+    h+=`</div></div>`;
+  });
+  return h+`</div></div>`;
+}
+
+function renderList(items){
+  let h=`<div class="list">`;
+  DAYS.forEach(day=>{
+    const di=items.filter(x=>x.day===day).sort((a,b)=>a.s-b.s||a.grp.localeCompare(b.grp));
+    if(!di.length)return;
+    h+=`<div class="daytitle">${day}</div>`;
+    di.forEach(x=>{
+      h+=`<div class="item" style="--c:${color(x.course)}">
+        <h4>${x.course}</h4>
+        <div class="time">🕘 ${t(x.s)} – ${t(x.e)} • مجموعة ${x.grp}</div>
+        <div>${x.kind}${x.sec?" — سكشن "+x.sec:""}</div>
+        <div>📍 ${x.hall}</div>
+        <div>👤 ${x.doc}</div></div>`;
+    });
+  });
+  return h+`</div>`;
+}
+
+function hasFilter(){
+  return $("q").value.trim()||["fCourse","fDoc","fSec","fDay","fGrp","fKind"].some(i=>$(i).value);
+}
+
+function legend(){
+  $("legend").innerHTML=COURSES.map(c=>`<span class="chip ${$("fCourse").value===c?"sel":""}" data-c="${c}"><i style="background:${color(c)}"></i>${c}</span>`).join("");
+  $("legend").querySelectorAll(".chip").forEach(el=>el.onclick=()=>{
+    $("fCourse").value=$("fCourse").value===el.dataset.c?"":el.dataset.c; render();
+  });
+}
+
+function render(){
+  const items=filtered();
+  $("count").textContent=items.length+" نتيجة";
+  legend();
+  $("out").innerHTML=items.length?(view==="grid"?renderGrid(items):renderList(items)):`<div class="panel none">لا توجد نتائج مطابقة 🔍</div>`;
+}
+
+["q","fCourse","fDoc","fSec","fDay","fGrp","fKind"].forEach(i=>$(i).addEventListener(i==="q"?"input":"change",render));
+$("vGrid").onclick=()=>{view="grid";$("vGrid").classList.add("on");$("vList").classList.remove("on");render();};
+$("vList").onclick=()=>{view="list";$("vList").classList.add("on");$("vGrid").classList.remove("on");render();};
+$("pal").onclick=()=>{pal=(pal+1)%PALETTES.length;try{localStorage.setItem("pal",pal)}catch(e){};render();};
+$("dk").onclick=()=>{document.body.classList.toggle("dark");try{localStorage.setItem("dk",document.body.classList.contains("dark")?"1":"0")}catch(e){};};
+$("reset").onclick=()=>{$("q").value="";["fCourse","fDoc","fSec","fDay","fGrp","fKind"].forEach(i=>$(i).value="");render();};
+
+if(window.innerWidth<700){$("vList").click();}else render();
+</script>
+</body>
+</html>
